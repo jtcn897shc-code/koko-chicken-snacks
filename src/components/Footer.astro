@@ -1,0 +1,74 @@
+---
+import { contact, social } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+  <div class="shell foot__grid">
+    <div class="foot__brand">
+      <a href="#top" class="foot__wordmark">KOKO</a>
+      <p class="foot__cuisine">Korean fried chicken &amp; snacks</p>
+    </div>
+
+    <div class="foot__col">
+      <a href={contact.mapLink} target="_blank" rel="noopener">
+        {contact.street}, {contact.city} {contact.postal}
+      </a>
+      <a href={`tel:${contact.phoneHref}`}>{contact.phoneDisplay}</a>
+      {social.length > 0 && (
+        <div class="foot__social">
+          {social.map((s) => (
+            <a href={s.href} target="_blank" rel="noopener">{s.label}</a>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <p class="foot__legal">
+      &copy; {year} {contact.name}<br />
+      <span>Site by <a href="https://destura.studio" target="_blank" rel="noopener">Destura</a></span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    background: var(--frame);
+    color: var(--on-frame);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-top: 3px solid var(--primary);
+  }
+  .foot__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: var(--space-l);
+    align-items: start;
+  }
+  .foot a { color: inherit; text-decoration: none; }
+  .foot a:hover { color: #fff; text-decoration: underline; }
+
+  .foot__wordmark {
+    font-weight: 800;
+    font-size: 1.75rem;
+    letter-spacing: -0.04em;
+    color: var(--primary-bright);
+  }
+  .foot__cuisine { margin-top: 0.35rem; color: var(--muted-on-frame); font-size: var(--step--1); }
+
+  .foot__col { display: grid; gap: 0.4rem; align-content: start; font-size: var(--step-0); }
+  .foot__social { display: flex; gap: 1rem; margin-top: 0.5rem; }
+
+  .foot__legal {
+    font-size: var(--step--1);
+    color: var(--muted-on-frame);
+    line-height: 1.7;
+    justify-self: end;
+    text-align: right;
+  }
+  .foot__legal a { text-decoration: underline; text-underline-offset: 0.2em; }
+
+  @media (max-width: 760px) {
+    .foot__grid { grid-template-columns: 1fr; gap: var(--space-m); }
+    .foot__legal { justify-self: start; text-align: left; }
+  }
+</style>

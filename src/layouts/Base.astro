@@ -1,0 +1,134 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import { contact, hours, orderLinks } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${contact.name} — ${contact.tagline}`,
+  description = `${contact.name}: Korean double-fried chicken and snacks in downtown Abbotsford, BC. Honey soy garlic, sweet & spicy, cheese corndogs, purple rice. Order in, take out, or delivery.`,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+
+// Map our day names to schema.org day URIs.
+const DAY_URI: Record<string, string> = {
+  Monday: 'https://schema.org/Monday',
+  Tuesday: 'https://schema.org/Tuesday',
+  Wednesday: 'https://schema.org/Wednesday',
+  Thursday: 'https://schema.org/Thursday',
+  Friday: 'https://schema.org/Friday',
+  Saturday: 'https://schema.org/Saturday',
+  Sunday: 'https://schema.org/Sunday',
+};
+
+// "11:00 am to 10:30 pm" -> { opens: "11:00", closes: "22:30" }
+function to24(t: string) {
+  const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/i);
+  if (!m) return t;
+  let h = parseInt(m[1], 10);
+  const min = m[2];
+  const ap = m[3].toLowerCase();
+  if (ap === 'pm' && h !== 12) h += 12;
+  if (ap === 'am' && h === 12) h = 0;
+  return `${String(h).padStart(2, '0')}:${min}`;
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: contact.name,
+  description,
+  servesCuisine: ['Korean', 'Fried Chicken'],
+  priceRange: '$$',
+  url: canonical,
+  telephone: contact.phoneHref,
+  hasMenu: canonical + '#menu',
+  acceptsReservations: 'False',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: contact.street,
+    addressLocality: 'Abbotsford',
+    addressRegion: contact.region,
+    postalCode: contact.postal,
+    addressCountry: contact.country,
+  },
+  openingHoursSpecification: hours.map((h) => {
+    const [open, close] = h.time.split(' to ');
+    return {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: DAY_URI[h.days],
+      opens: to24(open),
+      closes: to24(close),
+    };
+  }),
+  potentialAction: {
+    '@type': 'OrderAction',
+    target: orderLinks.uberEats,
+    deliveryMethod: 'https://schema.org/OnSitePickup',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`.replace(/\/{2,}/g, '/')} />
+    <link rel="canonical" href={canonical} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <!-- PREVIEW ONLY: keep the draft out of search results. Remove at launch. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#c23b23" />
+
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_CA" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a href="#menu" class="skip-link">Skip to menu</a>
+    <slot />
+
+    <script>
+      // Nav solidifies once the hero sentinel scrolls out of view.
+      // (Scroll reveal is pure CSS — see global.css — so there is nothing else
+      // here that could leave content hidden if JS fails to run.)
+      const sentinel = document.getElementById('nav-sentinel');
+      const nav = document.getElementById('site-nav');
+      if (sentinel && nav && 'IntersectionObserver' in window) {
+        new IntersectionObserver(
+          ([entry]) => nav.classList.toggle('is-solid', !entry.isIntersecting),
+          { threshold: 0 },
+        ).observe(sentinel);
+      }
+    </script>
+
+    <style>
+      .skip-link {
+        position: fixed;
+        top: 0.5rem;
+        left: 0.5rem;
+        z-index: 999;
+        padding: 0.6rem 1rem;
+        background: var(--ink);
+        color: #fff;
+        border-radius: var(--radius-pill);
+        text-decoration: none;
+        transform: translateY(-150%);
+        transition: transform 0.2s var(--ease-out);
+      }
+      .skip-link:focus { transform: none; }
+    </style>
+  </body>
+</html>

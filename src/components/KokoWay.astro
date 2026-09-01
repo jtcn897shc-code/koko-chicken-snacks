@@ -1,0 +1,53 @@
+---
+import { kokoWay } from '../data/site';
+---
+
+<section class="way" aria-label="What KOKO is about">
+  <ul class="way__list shell" data-reveal-group>
+    {
+      kokoWay.map((item) => (
+        <li class="way__item" data-reveal>{item}</li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .way {
+    background: var(--primary);
+    color: #fff;
+  }
+  .way__list {
+    list-style: none;
+    padding-block: clamp(1.75rem, 4vw, 2.75rem);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 3vw, 3rem);
+  }
+  .way__item {
+    font-weight: 700;
+    font-size: var(--step-1);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .way__item + .way__item {
+    border-inline-start: 1px solid oklch(1 0 0 / 0.24);
+    padding-inline-start: clamp(1rem, 3vw, 3rem);
+  }
+
+  @media (max-width: 860px) {
+    .way__list { grid-template-columns: 1fr 1fr; gap: 1.25rem 1.5rem; }
+    .way__item:nth-child(3) { border-inline-start: none; padding-inline-start: 0; }
+  }
+  @media (max-width: 460px) {
+    .way__list { grid-template-columns: 1fr; gap: 0; }
+    .way__item + .way__item {
+      border-inline-start: none;
+      padding-inline-start: 0;
+      border-block-start: 1px solid oklch(1 0 0 / 0.22);
+      margin-block-start: 1rem;
+      padding-block-start: 1rem;
+    }
+  }
+</style>

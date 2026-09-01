@@ -1,0 +1,140 @@
+---
+import { contact, hours, orderLinks } from '../data/site';
+
+const today = new Date().toLocaleDateString('en-CA', {
+  weekday: 'long',
+  timeZone: 'America/Vancouver',
+});
+---
+
+<section class="visit section" id="visit">
+  <div class="shell visit__grid">
+    <div class="visit__info" data-reveal-group>
+      <h2 class="visit__title" data-reveal>Come by</h2>
+
+      <address class="visit__address" data-reveal>
+        <a href={contact.mapLink} target="_blank" rel="noopener">
+          {contact.street}<br />{contact.city} {contact.postal}
+        </a>
+        <a class="visit__tel" href={`tel:${contact.phoneHref}`}>{contact.phoneDisplay}</a>
+      </address>
+
+      <dl class="hours" data-reveal>
+        {
+          hours.map((h) => (
+            <div class={`hours__row${h.days === today ? ' is-today' : ''}`}>
+              <dt>{h.days}{h.days === today && <span class="hours__pill">Today</span>}</dt>
+              <dd>{h.time}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="visit__order" data-reveal>
+        <p class="visit__orderLabel">Delivery across the Fraser Valley</p>
+        <div class="visit__orderBtns">
+          <a class="btn" href={orderLinks.uberEats} target="_blank" rel="noopener">Order on Uber Eats</a>
+          <a class="btn btn--ghost" href={orderLinks.doorDash} target="_blank" rel="noopener">Order on DoorDash</a>
+        </div>
+      </div>
+
+      <p class="visit__parking" data-reveal>
+        Street parking runs along Montrose. There is more in the lot off George
+        Ferguson, a short walk away.
+      </p>
+    </div>
+
+    <figure class="visit__map" data-reveal>
+      <iframe
+        src={contact.mapEmbed}
+        title={`Map to ${contact.name}, ${contact.street}, ${contact.city}`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .visit { background: var(--bg); }
+  .visit__grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .visit__title {
+    font-size: var(--step-4);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .visit__address {
+    font-style: normal;
+    margin-top: var(--space-l);
+    display: grid;
+    gap: 0.35rem;
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+  .visit__address a { text-decoration: none; }
+  .visit__address a:first-child:hover { color: var(--primary); }
+  .visit__tel { font-weight: 600; color: var(--primary); width: max-content; }
+
+  .hours {
+    margin-top: var(--space-l);
+    border-top: 1px solid var(--hairline);
+  }
+  .hours__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.55rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .hours__row dt { font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
+  .hours__row dd { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .hours__row.is-today dt,
+  .hours__row.is-today dd { color: var(--ink); font-weight: 600; }
+  .hours__pill {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary);
+    padding: 0.1em 0.5em;
+    border-radius: var(--radius-pill);
+  }
+
+  .visit__order { margin-top: var(--space-l); }
+  .visit__orderLabel { font-weight: 600; margin-bottom: var(--space-s); }
+  .visit__orderBtns { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+  .visit__parking {
+    margin-top: var(--space-l);
+    color: var(--muted);
+    font-size: var(--step--1);
+    max-width: 42ch;
+  }
+
+  .visit__map {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    position: sticky;
+    top: 6rem;
+  }
+  .visit__map iframe {
+    width: 100%;
+    height: clamp(360px, 60vh, 560px);
+    border: 0;
+    display: block;
+    filter: grayscale(0.25) contrast(1.02);
+  }
+
+  @media (max-width: 900px) {
+    .visit__grid { grid-template-columns: 1fr; }
+    .visit__map { position: static; }
+    .visit__map iframe { height: 340px; }
+  }
+</style>

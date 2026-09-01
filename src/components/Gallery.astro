@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import g1 from '../assets/gallery-1.jpg';
+import g2 from '../assets/gallery-2.jpg';
+import g3 from '../assets/gallery-3.jpg';
+
+const shots = [
+  { src: g1, alt: 'A tray of curry-sprinkle fries and cheese fries next to a soda.' },
+  { src: g2, alt: 'A table spread: two flavours of chicken, purple rice, pickled radish and kimchi in small dishes.' },
+  { src: g3, alt: 'Close crop of spicy chicken, lacquered red and flecked with sesame.' },
+];
+---
+
+<section class="gallery" aria-label="Photos from the shop">
+  <div class="gallery__strip" data-reveal-group>
+    {
+      shots.map((s) => (
+        <figure class="gallery__item" data-reveal>
+          <Image src={s.src} alt={s.alt} widths={[360, 560, 820]} sizes="(max-width: 760px) 80vw, 33vw" />
+        </figure>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .gallery { background: var(--bg); padding-block: clamp(0.5rem, 1.5vw, 1rem); }
+
+  .gallery__strip {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1.25fr;
+    gap: 6px;
+  }
+  .gallery__item {
+    margin: 0;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+  .gallery__item:first-child { border-start-start-radius: var(--radius); border-end-start-radius: var(--radius); }
+  .gallery__item:last-child { border-start-end-radius: var(--radius); border-end-end-radius: var(--radius); }
+  .gallery__item :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 760px) {
+    .gallery__strip {
+      grid-auto-flow: column;
+      grid-template-columns: none;
+      grid-auto-columns: 80%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .gallery__strip::-webkit-scrollbar { display: none; }
+    .gallery__item { scroll-snap-align: center; border-radius: var(--radius); }
+  }
+</style>
