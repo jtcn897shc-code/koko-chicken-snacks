@@ -8,7 +8,7 @@ own photography before launch. Keep the same filename and the site picks it up.
 |------|-------------|--------|
 | `hero.jpg` | KOKO's chicken in the paper-lined basket, wide crop | unsplash.com/photos/P0bxlL6coxc |
 | `fav-honey-soy-garlic.jpg` | Honey soy garlic chicken, close | unsplash photo-1641848392626-b1c886f02e21 |
-| `fav-sweet-spicy.jpg` | Sweet & spicy chicken, red glaze | unsplash photo-1662107020333-3d9db787d480 |
+| `fav-sweet-spicy.jpg` | Sweet & spicy chicken, red glaze | unsplash photo-1730900737727-9301ca83437e |
 | `fav-corndog.jpg` | Cheese snow corndog, cheese pull | unsplash.com/photos (korean corn dog) |
 | `about.jpg` | The counter / interior at KOKO | unsplash.com/photos (korean restaurant) |
 | `gallery-1.jpg` | Loaded fries or a saucy plate | unsplash.com/photos (korean fried chicken) |
