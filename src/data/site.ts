@@ -125,7 +125,7 @@ export const favourites: Favourite[] = [
   {
     name: 'Honey Soy Garlic',
     blurb:
-      'The one most people order. Sticky and garlicky with a faint sweetness, glossy enough to see your reflection in.',
+      'The one most people order. Crisp and garlicky with a faint sweetness, buried under fresh scallion.',
     img: 'honeySoyGarlic',
   },
   {
